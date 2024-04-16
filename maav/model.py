@@ -37,15 +37,16 @@ class Model:
 
             
         self.model = Sequential([
-            Masking(mask_value=0),
+            #Masking(mask_value=0),
             
-            Embedding(input_dim=config["VOCABULARY_SIZE"], output_dim=config["OUTPUT_DIMENSION"], input_length=config["MAX_SEQUENCE_LENGTH"]),
-            Flatten(),
-            GatingLayer(config["MAX_SEQUENCE_LENGTH"] * config["OUTPUT_DIMENSION"]),
+            #Embedding(input_dim=config["VOCABULARY_SIZE"], output_dim=config["OUTPUT_DIMENSION"], input_length=config["MAX_SEQUENCE_LENGTH"]),
+            #Flatten(),
+            #GatingLayer(config["MAX_SEQUENCE_LENGTH"] * config["OUTPUT_DIMENSION"]),
             #Dropout(0.2),
             #Dense(2048, activation='relu'),
-            Dense(5, activation='relu'),
-            Dense(1, activation='sigmoid')
+            Dense(2, activation='relu'),
+            Dense(2, activation='relu'),
+            Dense(2, activation='relu')
             #Dense(config["VOCAB_NEURONS"] * config["MAX_OUTPUT_SEQUENCE_LENGTH"], activation='sigmoid')# Use of sigmoid activated neurons for handling very large vocabularies
         ])
 
@@ -80,7 +81,7 @@ class Trainer_Model(Model):
         
         optm = op.optimizer(self.model, X_train, y_train)
         print("Hello\n\n\n")
-        optm.train(10000)
+        optm.train(1000)
         print("Hai")
         print("Hello\n\n\n")
 
