@@ -29,7 +29,6 @@ from maav.trainer import Trainer, Augmented_Trainer
 from maav.dataset_preprocessor import Dataset_Preprocessor
 from maav.user import User
 import maav.plotter
-import maav.dataset_creator
 import maav.tester
 
 print("\n\n\n\n\nWelcome to the Morning Model framework\n\n(If you're running first time you may need to bake the dataset first(Read manual.txt for more details))\n\nTrain Model --> 1\nUse Model --> 2\nBake dataset --> 3\nPlot last training logs --> 4\nCreate dataset --> 5\nTest model --> 6\nStart data augmented training section  --> 7")
