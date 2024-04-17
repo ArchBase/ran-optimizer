@@ -68,8 +68,12 @@ class optimizer:
         self.prev_loss = None
         self.prev_accuracy = None
         self.weight_maniputlator = Weight_Manipulator()
+        self.prev_params = None
+        self.prev_loss = None
+        self.new_params = None
+        self.new_loss = None
     
-    def calculate_gradient(self, prev=[], new=[]):
+    def calculate_gradient(self, prev=[], new=[], negate=False):
         prev = self.weight_maniputlator.get_params_array(prev)
         new = self.weight_maniputlator.get_params_array(new)
 
@@ -80,6 +84,8 @@ class optimizer:
         else:
             for index in range(len(prev)):
                 grad.append(new[index] - prev[index])
+                if negate:
+                    grad[-1] = -grad[-1]
         return grad
     
 
@@ -95,7 +101,25 @@ class optimizer:
         something = self.model.evaluate(x_test_tensor, y_test_tensor)
         return something
 
+    def step_update(self):
+        
     def train(self, epochs=0):
+        self.prev_params = self.model.get_weights()
+        self.prev_loss = self.get_loss()
+
+        self.new_params = self.weight_maniputlator.random_update_params(self.prev_params)
+        self.model.set_weights(self.new_params)
+        self.new_loss = self.get_loss()
+
+        if self.new_loss < self.prev_loss:
+            grad = self.calculate_gradient(self.prev_params, self.new_params, negate=False)
+        else:
+            grad = self.calculate_gradient(self.prev_params, self.new_params, negate=True)
+        
+
+
+
+        return
         self.model.build(input_shape=(None, config["MAX_SEQUENCE_LENGTH"]))
         #for epoch in range(epochs):
         #configuration.progress_bar("Training ran", epoch, epochs)
