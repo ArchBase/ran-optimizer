@@ -44,9 +44,9 @@ class Model:
             #GatingLayer(config["MAX_SEQUENCE_LENGTH"] * config["OUTPUT_DIMENSION"]),
             #Dropout(0.2),
             #Dense(2048, activation='relu'),
+            Dense(config["MAX_SEQUENCE_LENGTH"], activation='relu'),
             Dense(2, activation='relu'),
-            Dense(2, activation='relu'),
-            Dense(2, activation='relu')
+            Dense(config["MAX_OUTPUT_SEQUENCE_LENGTH"], activation='relu')
             #Dense(config["VOCAB_NEURONS"] * config["MAX_OUTPUT_SEQUENCE_LENGTH"], activation='sigmoid')# Use of sigmoid activated neurons for handling very large vocabularies
         ])
 

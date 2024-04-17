@@ -1,6 +1,7 @@
 import numpy as np
 from maav.configuration import config
 import maav.configuration as configuration
+import tensorflow as tf
 
 class Weigth_Manipulator:
     def __init__(self) -> None:
@@ -27,36 +28,20 @@ class optimizer:
         self.prev_params = None
         self.prev_loss = None
         self.prev_accuracy = None
-    def random_update_params(self, params):
-        #print(params)
-        #print(type(params))
-        if isinstance(params, np.ndarray) or type(params) is list:
-            for i in range(len(params)):
-                params[i] = self.random_update_params(params[i])
-            return params
-        else:
-            params += np.random.uniform(config["MIN_UPDATE_FACTOR"], config["MAX_UPDATE_FACTOR"])
-            return params
+    
+    def get_loss(self):
+        x_test_tensor = tf.convert_to_tensor(self.x_train, dtype=tf.int32)
+        y_test_tensor = tf.convert_to_tensor(self.y_train, dtype=tf.int32)
+        loss, accuracy = self.model.evaluate(x_test_tensor, y_test_tensor)
+        return loss
 
-        
-        buffer = None
-        for each in params:
-            #print(type(each))
-            if isinstance(each, np.ndarray):
-                self.random_update_params(each)
-                return
-            else:
-                each += np.random.uniform(config["MIN_UPDATE_FACTOR"], config["MAX_UPDATE_FACTOR"])
-                buffer.append(each)
-                
-        return buffer
-        
     def train(self, epochs=0):
         self.model.build(input_shape=(None, config["MAX_SEQUENCE_LENGTH"]))
         #for epoch in range(epochs):
         #configuration.progress_bar("Training ran", epoch, epochs)
-        self.prev_params = self.model.get_weights()
+        #self.prev_params = self.model.get_weights()
         print(self.prev_params)
+        print(self.get_loss())
         print("\n\n\njjjjjjjjj\n\n\n")
         s = self.random_update_params(self.prev_params)
         print(s)
