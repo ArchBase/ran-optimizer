@@ -53,7 +53,7 @@ class Model:
         optimizer = optimizers.Adam(learning_rate=config["LEARNING_RATE"])
 
         # Compile the mode
-        self.model.compile(optimizer=optimizer, loss='binary_crossentropy')
+        self.model.compile(optimizer=optimizer, loss='mean_squared_error')
         #print(self.model.summary())
     
     

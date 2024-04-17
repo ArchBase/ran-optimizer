@@ -25,7 +25,7 @@ class Dataset:
         self.y_train = []
         self.table = []
         self.num_of_rows_read = 0
-        self.y_train_index = 1
+        self.y_train_index = config["Y_TRAIN_INDEX"]
         self.ids = []
         
 
@@ -82,8 +82,9 @@ class Dataset:
             #print(row['prompt'])
             #self.X_train.append(row['prompt'])
             # Format the row as desired
-            x_text = ""
             #row = row[:-1]
+            X_train = []
+            y_train = []
             for i, column in enumerate(row):
                 if i == 0:
                     self.ids.append(column)
@@ -93,11 +94,16 @@ class Dataset:
 
 
                 if i == self.y_train_index:
-                    self.y_train.append(int(column))
+                    y_train.append(int(column))
                     continue
+                
+                if i != config["Y_TRAIN_INDEX"]:
+                    X_train.append(int(column))
 
-                x_text += f" {column}"
-            self.X_train.append((pad_sequences([self.tokenizer.text_to_sequences(configuration.split(configuration.clean_text(x_text)))], padding='pre', maxlen=config["MAX_SEQUENCE_LENGTH"], truncating='pre')[0]).tolist())
+            self.X_train.append(X_train)
+            self.y_train.append(y_train)
+                #x_text += f" {column}"
+            #self.X_train.append((pad_sequences([self.tokenizer.text_to_sequences(configuration.split(configuration.clean_text(x_text)))], padding='pre', maxlen=config["MAX_SEQUENCE_LENGTH"], truncating='pre')[0]).tolist())
             #self.X_train.append(self.tokenizer.text_to_sequences(configuration.split(configuration.clean_text(x_text))))
             #self.X_train.append((pad_sequences([self.tokenizer.text_to_sequences(configuration.split(configuration.clean_text(row['prompt'])))], padding='pre', maxlen=config["MAX_SEQUENCE_LENGTH"], truncating='pre')[0]).tolist())
 
@@ -124,7 +130,7 @@ class Dataset:
         #print(f"Processed {ij} rows")
              
     def get_processed_dataset(self):
-        return self.X_train[0]
+        return self.X_train, self.y_train
 
     def save(self, save_tokenizer=True):
         print("\n\tSaving dataset")
@@ -189,6 +195,7 @@ class Dataset_Preprocessor(Dataset):
                 return
         self.save()
         print("\tDataset processed and saved successfully")
+        #print(self.get_processed_dataset())
 
 
 
