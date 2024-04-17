@@ -6,9 +6,12 @@ import tensorflow as tf
 class Weight_Manipulator:
     def __init__(self) -> None:
         self.shape_reference = None
-        self.weights_count
+        self.weights_count = 0
         self.line_params = []
+        self.grad = []
+        self.grad_array_index = 0
     def _format_params(self, params):
+        self.weights_count += 1
         if isinstance(params, np.ndarray) or type(params) is list:
             for i in range(len(params)):
                 params[i] = self._format_params(params[i])
@@ -18,10 +21,13 @@ class Weight_Manipulator:
             return params
     
     def get_params_array(self, params):
+        self.weights_count = 0
+        self.shape_reference = params
         self._format_params(params)
         return self.line_params
 
     def _ran_update_params(self, params):
+        self.weights_count += 1
         if isinstance(params, np.ndarray) or type(params) is list:
             for i in range(len(params)):
                 params[i] = self._ran_update_params(params[i])
@@ -31,8 +37,27 @@ class Weight_Manipulator:
             return params
         
     def random_update_params(self, params):
+        self.weights_count = 0
         self.shape_reference = params
         return self._ran_update_params(params)
+    
+    def _apply_grad_to_weights(self, params):
+        if isinstance(params, np.ndarray) or type(params) is list:
+            for i in range(len(params)):
+                params[i] = self._format_params(params[i])
+            return params
+        else:
+            params += self.grad[self.grad_array_index]
+            self.grad_array_index += 1
+            return params
+    
+    def apply_grad(self, grad, new_params):
+        self.grad_array_index = 0
+        self.grad = grad
+        if len(grad) != self.weights_count:
+            print("Shape error")
+        else:
+            return self._apply_grad_to_weights(new_params)
 
 class optimizer:
     def __init__(self, model, x_train, y_train) -> None:
@@ -57,8 +82,12 @@ class optimizer:
                 grad.append(new[index] - prev[index])
         return grad
     
-    def apply_grad(self, grad=[]):
 
+    def apply_grad(self, grad=[]):
+        if len(grad) != self.weight_maniputlator.weights_count:
+            print("Shape error")
+        else:
+            pass
 
     def get_loss(self):
         x_test_tensor = tf.convert_to_tensor(self.x_train, dtype=tf.int32)
