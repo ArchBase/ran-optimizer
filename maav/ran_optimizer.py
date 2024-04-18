@@ -4,6 +4,11 @@ import maav.configuration as configuration
 import tensorflow as tf
 import copy
 
+class History:
+    def __init__(self) -> None:
+        self.history = {"loss":[], "val_loss":None}
+
+
 class Weight_Manipulator:
     def __init__(self) -> None:
         self.shape_reference = None
@@ -104,6 +109,7 @@ class optimizer:
         self.new_loss = None
         self.epoch_count = 0
         self.epochs = 0
+        self.history = History()
     
     
 
@@ -119,6 +125,7 @@ class optimizer:
         self.new_params = self.weight_maniputlator.apply_grad(grad, copy.deepcopy(self.prev_params))
         self.model.set_weights(self.new_params)
         self.new_loss = self.get_loss()
+        self.history.history["loss"].append(self.new_loss)
         self.epoch_count += 1
         if self.new_loss < self.prev_loss:
             # model improved
@@ -145,6 +152,7 @@ class optimizer:
         self.epochs = epochs
         self.prev_params = self.model.get_weights()
         self.prev_loss = self.get_loss()
+        self.history.history["loss"].append(self.prev_loss)
 
         waste = self.weight_maniputlator.get_params_array(copy.deepcopy(self.prev_params))
         grad = self.weight_maniputlator.generate_random_grad()
@@ -153,7 +161,7 @@ class optimizer:
         self.step_update(grad)
         
 
-        return
+        return self.history
         self.prev_params = self.model.get_weights()
         self.prev_loss = self.get_loss()
 
