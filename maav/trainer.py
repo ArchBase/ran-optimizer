@@ -5,6 +5,7 @@ from maav.tokenizer import Traininer_Tokenizer
 from maav.model import Trainer_Model
 import tensorflow as tf
 from tensorflow.keras.callbacks import EarlyStopping
+import time
 
 
 class Trainer:
@@ -33,7 +34,30 @@ class Trainer:
             # Load existing model
             self.model.load()
             print(f"\n\nLoaded model weight: {self.model.model.layers[1].get_weights()[0][0][0]}")
-    
+    def train_model_using_adam(self, epochs=10, batch_size=32, save=False, process_dataset=False):
+        #Load dataset and Tokenizers
+        self.dataset.load()
+        #print(self.dataset.get_processed_dataset())
+        #return
+        # The training section
+        print("\nStarting training.")
+        try:
+            start_time = time.time()
+            self.model.train_model(tf.cast(tf.constant(self.dataset.X_train), tf.int32), tf.cast(tf.constant(self.dataset.y_train), tf.int32), epochs=epochs, batch_size=batch_size)
+            end_time = time.time()
+            time_taken = end_time - start_time
+            print("Time taken by the optimization algorithm: {:.6f} seconds".format(time_taken))
+        except KeyboardInterrupt:
+            print("\nYou forcefully stopped the training process thus training logs are not available\n")
+            option = input("\nDo you want to save the current learned weights?(y/n) ")
+            if option != 'y':
+                return
+
+        # Save the model if save=True
+        if save:
+            self.model.save_model()
+            print(f"\n\nSaved model weight: {self.model.model.layers[1].get_weights()[0][0][0]}\nModel saving complete")
+
     def train_model(self, epochs=10, batch_size=32, save=False, process_dataset=False):
 
         #Load dataset and Tokenizers
@@ -43,7 +67,11 @@ class Trainer:
         # The training section
         print("\nStarting training.")
         try:
+            start_time = time.time()
             self.model.train_model(tf.cast(tf.constant(self.dataset.X_train), tf.int32), tf.cast(tf.constant(self.dataset.y_train), tf.int32), epochs=epochs, batch_size=batch_size)
+            end_time = time.time()
+            time_taken = end_time - start_time
+            print("Time taken by the optimization algorithm: {:.6f} seconds".format(time_taken))
         except KeyboardInterrupt:
             print("\nYou forcefully stopped the training process thus training logs are not available\n")
             option = input("\nDo you want to save the current learned weights?(y/n) ")

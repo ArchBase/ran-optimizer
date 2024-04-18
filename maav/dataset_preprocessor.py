@@ -73,6 +73,7 @@ class Dataset:
         configuration.find_best_values()
         
     def process_dataset(self):
+        #print(self.table)
         ij=0
         print("\tFormatting dataset")
         for index, row in enumerate(self.table):
@@ -130,7 +131,7 @@ class Dataset:
         #print(f"Processed {ij} rows")
              
     def get_processed_dataset(self):
-        return self.X_train, self.y_train
+        return self.y_train
 
     def save(self, save_tokenizer=True):
         print("\n\tSaving dataset")

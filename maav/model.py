@@ -45,8 +45,8 @@ class Model:
             #Dropout(0.2),
             #Dense(2048, activation='relu'),
             Dense(config["MAX_SEQUENCE_LENGTH"], activation='relu'),
-            Dense(20, activation='relu'),
-            Dense(20, activation='relu'),
+            Dense(50, activation='relu'),
+            Dense(50, activation='relu'),
             Dense(config["MAX_OUTPUT_SEQUENCE_LENGTH"], activation='relu')
             #Dense(config["VOCAB_NEURONS"] * config["MAX_OUTPUT_SEQUENCE_LENGTH"], activation='sigmoid')# Use of sigmoid activated neurons for handling very large vocabularies
         ])
@@ -78,8 +78,15 @@ class Trainer_Model(Model):
         self.history = None
         self.early_stopping_callback = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
 
+    def train_model_using_adam(self, X_train, y_train, epochs=10, batch_size=32, verbose=1):
+        if verbose == 0:
+            for _ in range(epochs):
+                self.history = self.model.fit(np.array(X_train), np.array(y_train), epochs=1, batch_size=int(batch_size), callbacks=[self.early_stopping_callback], verbose=verbose)
+                configuration.progress_bar("Traininng", _, epochs)
+        self.history = self.model.fit(np.array(X_train), np.array(y_train), epochs=int(epochs), batch_size=int(batch_size), callbacks=[self.early_stopping_callback], verbose=verbose)
+        return self.history
+    
     def train_model(self, X_train, y_train, epochs=10, batch_size=32, verbose=1):
-        
         optm = op.optimizer(self.model, X_train, y_train, epochs)
         print("Hello\n\n\n")
         self.history = optm.train(200)

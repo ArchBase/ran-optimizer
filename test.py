@@ -1,2 +1,6 @@
-import tensorflow as tf
-print(tf.config.list_physical_devices('GPU'))
+id, survived, a, b, c
+1,0,3,22,1,0
+2,1,1,38,1,0
+3,1,3,26,0,0
+4,1,1,35,1,0
+5,0,3,35,0,0

@@ -31,7 +31,7 @@ from maav.user import User
 import maav.plotter
 import maav.tester
 
-print("\n\n\n\n\nWelcome to the Morning Model framework\n\n(If you're running first time you may need to bake the dataset first(Read manual.txt for more details))\n\nTrain Model --> 1\nUse Model --> 2\nBake dataset --> 3\nPlot last training logs --> 4\nCreate dataset --> 5\nTest model --> 6\nStart data augmented training section  --> 7")
+print("\n\n\n\n\nWelcome to the Morning Model framework\n\n(If you're running first time you may need to bake the dataset first(Read manual.txt for more details))\n\nTrain Model --> 1\nUse Model --> 2\nBake dataset --> 3\nPlot last training logs --> 4\nCreate dataset --> 5\nTest model --> 6\nStart data augmented training section  --> 7\nTrain model using Adam optimizer --> 8")
 
 option = input("\nEnter your option: ")
 
@@ -91,5 +91,18 @@ elif option == '7':# Data augmented training
     trainer = Augmented_Trainer(try_out_times=try_out, batch_size=batch_size, epoch_per_aug=epoch_per_aug)
 
     trainer.start_training()
+elif option == '8':# Train using adam
+    print("\nTrain new model --> 1\nContinue training --> 2")
+    option = input("\nEnter your option: ")
+    if option == '1':# Train new model
+        trainer = Trainer("new")
+        epochs = input("\nEnter epochs: ")
+        batch_size = input("\nEnter batch size: ")
+        trainer.train_model_using_adam(epochs=epochs, batch_size=batch_size, save=True)
+    elif option == '2':# Train or fine tune existing model
+        trainer = Trainer("Train existing model")
+        epochs = int(input("\nEnter epochs: "))
+        batch_size = int(input("\nEnter batch size: "))
+        trainer.train_model_using_adam(epochs=epochs, batch_size=batch_size, save=True)
 
 
