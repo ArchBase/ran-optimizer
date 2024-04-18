@@ -14,7 +14,7 @@ class Weight_Manipulator:
     def generate_random_grad(self):
         self.grad = []
         for _ in range(self.weights_count):
-            self.grad.append(np.random.uniform(-1, 1))
+            self.grad.append(np.random.uniform(config["MIN_UPDATE_FACTOR"], config["MAX_UPDATE_FACTOR"]))
         return self.grad.copy()
     def _format_params(self, params):
         
@@ -55,6 +55,8 @@ class Weight_Manipulator:
                 params[i] = self._apply_grad_to_weights(params[i])
             return params
         else:
+            #print("(((((())))))" + str(self.grad_array_index))
+            #print(self.grad)
             params += self.grad[self.grad_array_index]
             self.grad_array_index += 1
             #print("updating")
@@ -87,8 +89,9 @@ class Weight_Manipulator:
             return self.grad.copy()
 
 class optimizer:
-    def __init__(self, model, x_train, y_train) -> None:
+    def __init__(self, model, x_train, y_train, epochs) -> None:
         self.model = model
+        self.epochs = epochs
         self.x_train = x_train
         self.y_train = y_train
         self.prev_params = None
@@ -135,36 +138,18 @@ class optimizer:
         return
 
 
-    def train(self, epochs=0):
+    def train(self, epochs):
         self.model.build(input_shape=(None, config["MAX_SEQUENCE_LENGTH"]))
-        si = []
-        si = self.model.get_weights()
-        print("params")
-        print(si)
-        y = self.weight_maniputlator.get_params_array(si.copy())
-        y = self.weight_maniputlator.get_params_array(si.copy())
-        print("HHHHHH")
-        print(y)
-        old_grad = self.weight_maniputlator.generate_random_grad()
         
-        f = self.weight_maniputlator.apply_grad(old_grad, copy.deepcopy(si))
-        #si = self.model.get_weights()
-        calc_grad = self.weight_maniputlator.calculate_gradient(si, f, negate=False)
-        
-        #print("grad")
-        #print(d)
-        print("old")
-        print(old_grad)
-        print("new")
-        print(calc_grad)
-        return
         self.epoch_count = 0
         self.epochs = epochs
         self.prev_params = self.model.get_weights()
         self.prev_loss = self.get_loss()
 
+        waste = self.weight_maniputlator.get_params_array(copy.deepcopy(self.prev_params))
         grad = self.weight_maniputlator.generate_random_grad()
-
+        #print("grad")
+        #print(grad)
         self.step_update(grad)
         
 

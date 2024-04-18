@@ -79,9 +79,9 @@ class Trainer_Model(Model):
 
     def train_model(self, X_train, y_train, epochs=10, batch_size=32, verbose=1):
         
-        optm = op.optimizer(self.model, X_train, y_train)
+        optm = op.optimizer(self.model, X_train, y_train, epochs)
         print("Hello\n\n\n")
-        optm.train(1000)
+        optm.train(200)
         print("Hai")
         print("Hello\n\n\n")
 
