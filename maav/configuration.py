@@ -16,18 +16,6 @@ with open("maav/config.json", "r") as file:
     config = json.load(file)
 
 
-def find_best_values():
-    # Find the best suited output neurons length
-        for i in range(config["MAX_VOCAB_FACTOR"]):
-
-            if (2**i) > config["VOCABULARY_SIZE"]:
-                config["VOCAB_NEURONS"] = i
-                print(f"\t\tbest fitting output neuron size: {config['VOCAB_NEURONS']}")
-                break
-            if i == config["MAX_VOCAB_FACTOR"] - 1:
-                print("Failed to find best vocab size")
-                quit()
-
 
 def to_key(number):
     return int(number)

@@ -11,11 +11,12 @@ class History:
     """
     def __init__(self) -> None:
         self.history = {"loss":[], "val_loss":None}
-    def is_loss_oscillating(self, new_loss):
+    def is_loss_oscillating(self):
         try:
-            last_5_loss_values = self.history["loss"][-3:]
+            last_5_loss_values = self.history["loss"][-5:]
             element_counts = Counter(last_5_loss_values)
             for loss, number_of_occurence in element_counts.items():
+                #print("checking")
                 if number_of_occurence > 2:
                     return True
             return False
@@ -164,14 +165,22 @@ class optimizer:
         
         if self.new_loss < self.prev_loss:
             # model improved
-            new_grad = self.weight_maniputlator.calculate_gradient(copy.deepcopy(self.prev_params), copy.deepcopy(self.new_params), negate=False)
+            if self.history.is_loss_oscillating():
+                new_grad = self.weight_maniputlator.generate_random_grad()
+                print("generatign another random grad")
+            else:
+                new_grad = self.weight_maniputlator.calculate_gradient(copy.deepcopy(self.prev_params), copy.deepcopy(self.new_params), negate=False)
             self.prev_params = self.new_params
             self.prev_loss = self.new_loss
 
             self.step_update(new_grad)
         else:
             # model not improved (negate gradient)
-            new_grad = self.weight_maniputlator.calculate_gradient(copy.deepcopy(self.prev_params), copy.deepcopy(self.new_params), negate=True)
+            if self.history.is_loss_oscillating():
+                new_grad = self.weight_maniputlator.generate_random_grad()
+                print("generatign another random grad")
+            else:
+                new_grad = self.weight_maniputlator.calculate_gradient(copy.deepcopy(self.prev_params), copy.deepcopy(self.new_params), negate=True)
 
             self.prev_params = self.new_params
             self.prev_loss = self.new_loss
