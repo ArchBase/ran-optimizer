@@ -29,9 +29,7 @@ class Tester:
         self.model = Tester_Model()
         self.dataset = dataset
         self.dataset.y_train_index = 50
-        #self.dataset.load()
-        #self.tokenizer = User_Tokenizer()
-    
+
     def generate_predictions(self):
         predictions = self.model.predict(pad_sequences(self.dataset.X_train, padding='pre', maxlen=config["MAX_SEQUENCE_LENGTH"], truncating='pre'))
         for _ in predictions:

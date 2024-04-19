@@ -58,11 +58,9 @@ class Tokenizer:
             try:
                 text.append(self.token_to_string[configuration.to_key(i)])
             except KeyError as e:
-                #text.append("<Unknown" + str(i) + ">")
                 continue
         for index, word in enumerate(text):
             if word == "<Unknown0>":
-                #print("deleted")
                 del text[index]
                 
         return text

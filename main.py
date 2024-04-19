@@ -1,7 +1,7 @@
 # Author Akshay
-# License details are provided in the repository
 
-# This project uses many libraries and dependencies, their licenses, terms, copyrights etc. will be applicable here also
+# This project uses many libraries and dependencies
+
 """
 Libraries/Frameworks used
 
@@ -12,6 +12,8 @@ json
 atexit
 os
 re
+copy
+collections
 
 pandas
 pickle

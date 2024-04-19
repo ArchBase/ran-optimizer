@@ -101,7 +101,7 @@ class Weight_Manipulator:
                     self.grad[-1] = -self.grad[-1]
             return self.grad.copy()
 
-class optimizer:
+class Ran_Optimizer:
     """
     The main optimizer implemention class
     This class uses ran optimization algorithm to optimize model weights to minimize loss function

@@ -79,7 +79,7 @@ class Trainer_Model(Model):
         return self.history
     
     def train_model(self, X_train, y_train, epochs=10, batch_size=32, verbose=1):
-        optm = op.optimizer(self.model, X_train, y_train, epochs)
+        optm = op.Ran_Optimizer(self.model, X_train, y_train, epochs)
         print("Hello\n\n\n")
         self.history = optm.train(200)
         print("Hai")

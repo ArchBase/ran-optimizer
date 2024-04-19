@@ -35,10 +35,10 @@ class Trainer:
             self.model.load()
             print(f"\n\nLoaded model weight: {self.model.model.layers[1].get_weights()[0][0][0]}")
     def train_model_using_adam(self, epochs=10, batch_size=32, save=False, process_dataset=False):
-        #Load dataset and Tokenizers
+
+        #Load dataset and Tokenizer
         self.dataset.load()
-        #print(self.dataset.get_processed_dataset())
-        #return
+
         # The training section
         print("\nStarting training.")
         try:
@@ -62,8 +62,7 @@ class Trainer:
 
         #Load dataset and Tokenizers
         self.dataset.load()
-        #print(self.dataset.get_processed_dataset())
-        #return
+
         # The training section
         print("\nStarting training.")
         try:
@@ -113,24 +112,15 @@ class  Augmented_Trainer(Trainer):# not needed
 
         print("Calculating best performance..")
         min = self.logs[0]
-        #print(self.logs)
         for _ in self.logs:
             if _['val_loss'] < min['val_loss']:
                 min = _
         print(f"Best dataset split found with val_loss of {min['val_loss']}")
         self.dataset.X_train = min['X_train']
         self.dataset.y_train = min['y_train']
-        #self.model = min['model']
+
         print("Saving best dataset")
         self.dataset.save(save_tokenizer=False)
-        #self.model.save_model()
-        #print(f"\n\nSaved model weight: {self.model.model.layers[1].get_weights()[0][0][0]}\nModel saving complete")
-
-
-                
-
-
-
 
     def clear_weights(self):
         self.model.__init__()

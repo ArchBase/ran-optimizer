@@ -28,20 +28,6 @@ class User:# not needed
         query_sequence = pad_sequences([query_sequence], padding='pre', maxlen=config["MAX_SEQUENCE_LENGTH"], truncating='pre')[0]
         query_sequence = query_sequence.tolist()
         token_response = self.model.predict(query_sequence)
-        #print(token_response)
         return config["TOKEN_TO_INSERT_BETWEEN"].join(self.tokenizer.sequence_to_text(token_response))
-        return token_response
         
-
-
-        for _ in range(length):
-            token_prediction = self.model.predict(query_sequence)
-            token_response.append(int(token_prediction))
-            query_sequence.append(int(token_prediction))
-            query_sequence = query_sequence[-config.MAX_SEQUENCE_LENGTH:]
-        
-        text_response = config.TOKEN_TO_INSERT_BETWEEN.join(self.tokenizer.sequence_to_text(token_response))
-        return text_response
-
-
 
