@@ -90,12 +90,14 @@ class Dataset:
                     continue
 
 
-                if i == self.y_train_index:
+                if i in self.y_train_index:
                     y_train.append(int(column))
-                    continue
+                
+                    
                 
                 if i != config["Y_TRAIN_INDEX"]:
                     X_train.append(int(column))
+                
 
             self.X_train.append(X_train)
             self.y_train.append(y_train)

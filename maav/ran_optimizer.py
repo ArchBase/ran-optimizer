@@ -4,16 +4,17 @@ import maav.configuration as configuration
 import tensorflow as tf
 import copy
 from collections import Counter
+import random
 
 class History:
     """
     Class to mimic tensorflow's training history instance
     """
     def __init__(self) -> None:
-        self.history = {"loss":[], "val_loss":None}
+        self.history = {"loss":[], "val_loss":None, "loss_non_batched":[]}
     def is_loss_oscillating(self):
         try:
-            last_5_loss_values = self.history["loss"][-5:]
+            last_5_loss_values = self.history["loss_non_batched"][-5:]
             element_counts = Counter(last_5_loss_values)
             for loss, number_of_occurence in element_counts.items():
                 if number_of_occurence > 2:
@@ -130,9 +131,17 @@ class Ran_Optimizer:
         self.epochs = 0
         self.history = History()
     
-    
+    def shuffle(self):# not needed
+        self.x_train, self.y_train = zip(*(random.sample(list(zip(self.x_train, self.y_train)), len(self.x_train))))
 
     def get_loss(self):
+        x_test_tensor = tf.convert_to_tensor(self.x_train, dtype=tf.int32)
+        y_test_tensor = tf.convert_to_tensor(self.y_train, dtype=tf.int32)
+        something = self.model.evaluate(x_test_tensor, y_test_tensor)
+        return something
+
+    def get_loss_batched(self):
+        self.shuffle()
         x_test_tensor = tf.convert_to_tensor(self.x_train, dtype=tf.int32)
         y_test_tensor = tf.convert_to_tensor(self.y_train, dtype=tf.int32)
         something = self.model.evaluate(x_test_tensor, y_test_tensor)
@@ -145,9 +154,10 @@ class Ran_Optimizer:
             return
         self.new_params = self.weight_maniputlator.apply_grad(grad, copy.deepcopy(self.prev_params))
         self.model.set_weights(self.new_params)
-        self.new_loss = self.get_loss()
+        self.new_loss = self.get_loss_batched()
         #self.new_loss = np.random.uniform(-1, 1)
-        self.history.history["loss"].append(self.new_loss)
+        self.history.history["loss"].append(self.get_loss())
+        self.history.history["loss_non_batched"].append(self.new_loss)
         self.epoch_count += 1
         
         if self.new_loss < self.prev_loss:
@@ -182,7 +192,7 @@ class Ran_Optimizer:
         self.epoch_count = 0
         self.epochs = epochs
         self.prev_params = self.model.get_weights()
-        self.prev_loss = self.get_loss()
+        self.prev_loss = self.get_loss_batched()
         self.history.history["loss"].append(self.prev_loss)
 
         waste = self.weight_maniputlator.get_params_array(copy.deepcopy(self.prev_params))# called to give self.weight_manipulator a reference of the model parameter array structure
