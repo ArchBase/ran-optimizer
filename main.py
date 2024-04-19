@@ -14,6 +14,7 @@ os
 re
 copy
 collections
+time
 
 pandas
 pickle
@@ -31,24 +32,36 @@ from maav.trainer import Trainer, Augmented_Trainer
 from maav.dataset_preprocessor import Dataset_Preprocessor
 from maav.user import User
 import maav.plotter
+import time
 import maav.tester
 
-print("\n\n\n\n\nWelcome to the Morning Model framework\n\n(If you're running first time you may need to bake the dataset first(Read manual.txt for more details))\n\nTrain Model --> 1\nUse Model --> 2\nBake dataset --> 3\nPlot last training logs --> 4\nCreate dataset --> 5\nTest model --> 6\nStart data augmented training section  --> 7\nTrain model using Adam optimizer --> 8")
+if config["RUNNING_FIRST_TIME"] == True:
+    print("\n\nIt looks like you're running this program first time, so baking dataset.\n")
+    time.sleep(3)
+    dataset = Dataset_Preprocessor()
+    dataset.process_and_save_dataset()
+    print("\n")
+    config["RUNNING_FIRST_TIME"] = False
+
+
+
+print("\n\n\n\n\nWelcome to the Morning Model framework\n\n(If you're running first time you may need to bake the dataset first(Read manual.txt for more details))\n\nTrain Model using Ran optimizer --> 1\nBake dataset --> 3\nPlot last training logs --> 4\nTrain model using Adam optimizer --> 8")
 
 option = input("\nEnter your option: ")
 
+
 if option == '1':# Train model
-    print("\nTrain new model --> 1\nContinue training --> 2")
+    print("\nTrain new model --> 1\nContinue training(experimental) --> 2")
     option = input("\nEnter your option: ")
     if option == '1':# Train new model
         trainer = Trainer("new")
-        epochs = input("\nEnter epochs: ")
-        batch_size = input("\nEnter batch size: ")
+        epochs = input("\nEnter epochs:(<900) ")
+        batch_size = 32
         trainer.train_model(epochs=epochs, batch_size=batch_size, save=True)
     elif option == '2':# Train or fine tune existing model
         trainer = Trainer("Train existing model")
-        epochs = int(input("\nEnter epochs: "))
-        batch_size = int(input("\nEnter batch size: "))
+        epochs = int(input("\nEnter epochs:(<900) "))
+        batch_size = 32
         trainer.train_model(epochs=epochs, batch_size=batch_size, save=True)
 elif option == '2':# Use the saved model
     user = User()

@@ -139,11 +139,14 @@ class Ran_Optimizer:
         return something
 
     def step_update(self, grad):
+        #configuration.progress_bar("Training using adam", self.epoch_count, self.epochs)
+        print(f"Ran: Epoch {self.epoch_count}/{self.epochs}")
         if self.epoch_count > self.epochs:
             return
         self.new_params = self.weight_maniputlator.apply_grad(grad, copy.deepcopy(self.prev_params))
         self.model.set_weights(self.new_params)
         self.new_loss = self.get_loss()
+        #self.new_loss = np.random.uniform(-1, 1)
         self.history.history["loss"].append(self.new_loss)
         self.epoch_count += 1
         
@@ -151,7 +154,7 @@ class Ran_Optimizer:
             # model improved
             if self.history.is_loss_oscillating():
                 new_grad = self.weight_maniputlator.generate_random_grad()
-                print("generatign another random grad")
+                print("generating another random grad")
             else:
                 new_grad = self.weight_maniputlator.calculate_gradient(copy.deepcopy(self.prev_params), copy.deepcopy(self.new_params), negate=False)
             self.prev_params = self.new_params
