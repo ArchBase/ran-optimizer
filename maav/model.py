@@ -24,7 +24,7 @@ class Model:
     """
     def __init__(self) -> None:
         # Define the model
-        class GatingLayer(tf.keras.layers.Layer):
+        class GatingLayer(tf.keras.layers.Layer):# not needed
             def __init__(self, units):
                 super(GatingLayer, self).__init__()
                 self.units = units
@@ -96,12 +96,7 @@ class Trainer_Model(Model):
 
 
         return
-        if verbose == 0:
-            for _ in range(epochs):
-                self.history = self.model.fit(np.array(X_train), np.array(y_train), epochs=1, validation_split=config["VALIDATION_SPLIT"], batch_size=int(batch_size), callbacks=[self.early_stopping_callback], verbose=verbose)
-                configuration.progress_bar("Traininng", _, epochs)
-        self.history = self.model.fit(np.array(X_train), np.array(y_train), epochs=int(epochs), validation_split=config["VALIDATION_SPLIT"], batch_size=int(batch_size), callbacks=[self.early_stopping_callback], verbose=verbose)
-        return self.history
+
     def save_model(self):
         self.model.save("saved_model/sequential")
         configuration.os.makedirs("saved_model/training_log", exist_ok=True)
@@ -115,7 +110,7 @@ class Trainer_Model(Model):
                 return
                 #pickle.dump(np.zeros(range(1, len(self.history.history['loss']) + 1)), file)
 
-class User_Model(Model):
+class User_Model(Model):# not needed
     """
     This class provides an easy interface to Model class
 
@@ -166,7 +161,7 @@ class User_Model(Model):
 
         return decimalsd
 
-class Advanced_Trainer_Model(Trainer_Model):
+class Advanced_Trainer_Model(Trainer_Model):# not needed
     """
     Class with more advanced features than normal Trainer_Model class
     

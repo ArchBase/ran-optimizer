@@ -90,7 +90,7 @@ class Trainer:
 
 
 
-class  Augmented_Trainer(Trainer):
+class  Augmented_Trainer(Trainer):# not needed
     def __init__(self, try_out_times=0, batch_size=0, epoch_per_aug=0):
         super().__init__(format="new")
         self.try_out_times = try_out_times

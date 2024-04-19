@@ -1,3 +1,5 @@
+# this is only used while creating to test snippets
+
 """id, survived, a, b, c
 1,0,3,22,1,0
 2,1,1,38,1,0

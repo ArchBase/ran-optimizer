@@ -150,7 +150,7 @@ class Dataset:
         with open('saved_model/processed_dataset/y_train.op', 'rb') as file:
             self.y_train = pickle.load(file)
     
-    def shuffle(self):
+    def shuffle(self):# not needed
         self.X_train, self.y_train = zip(*(random.sample(list(zip(self.X_train, self.y_train)), len(self.X_train))))
 
         
@@ -196,7 +196,5 @@ class Dataset_Preprocessor(Dataset):
                 return
         self.save()
         print("\tDataset processed and saved successfully")
-        #print(self.get_processed_dataset())
-
 
 

@@ -5,7 +5,7 @@ from maav.tokenizer import User_Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
-class User:
+class User:# not needed
 
     """
     This class offers an interface to use the model reccursively
