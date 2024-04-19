@@ -35,4 +35,3 @@ def plot():
 
     # Show the plot
     plt.show()
-    #plt.savefig('plot.png')

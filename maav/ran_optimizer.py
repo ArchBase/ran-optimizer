@@ -16,18 +16,9 @@ class History:
             last_5_loss_values = self.history["loss"][-5:]
             element_counts = Counter(last_5_loss_values)
             for loss, number_of_occurence in element_counts.items():
-                #print("checking")
                 if number_of_occurence > 2:
                     return True
             return False
-        except IndexError:
-            return False
-        try:
-            avg = sum(self.history["loss"][-3:]) / 3
-            if not (avg - new_loss > 1):
-                return False
-            else:
-                return True
         except IndexError:
             return False
 
@@ -84,11 +75,8 @@ class Weight_Manipulator:
                 params[i] = self._apply_grad_to_weights(params[i])
             return params
         else:
-            #print("(((((())))))" + str(self.grad_array_index))
-            #print(self.grad)
             params += self.grad[self.grad_array_index]
             self.grad_array_index += 1
-            #print("updating")
             return params
     
     def apply_grad(self, grad, params):
@@ -99,9 +87,6 @@ class Weight_Manipulator:
         else:
             return self._apply_grad_to_weights(params)
     def calculate_gradient(self, prev_params=[], new_params=[], negate=False):
-        #print("Params: ")
-        #print(prev_params)
-        #print(new_params)
         prev = self.get_params_array(prev_params)
         new = self.get_params_array(new_params)
 
@@ -111,7 +96,6 @@ class Weight_Manipulator:
             print("Shape error")
         else:
             for index in range(len(prev)):
-                #print("updating " + str(new[index]) + " and " + str(prev[index]))
                 self.grad.append(new[index] - prev[index])
                 if negate:
                     self.grad[-1] = -self.grad[-1]
@@ -200,8 +184,6 @@ class optimizer:
 
         waste = self.weight_maniputlator.get_params_array(copy.deepcopy(self.prev_params))# called to give self.weight_manipulator a reference of the model parameter array structure
         grad = self.weight_maniputlator.generate_random_grad()
-        #print("grad")
-        #print(grad)
         self.step_update(grad)
         
 

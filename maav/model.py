@@ -23,6 +23,7 @@ class Model:
         load(): To load the saved model
     """
     def __init__(self) -> None:
+
         # Define the model
         class GatingLayer(tf.keras.layers.Layer):# not needed
             def __init__(self, units):
@@ -37,25 +38,16 @@ class Model:
 
             
         self.model = Sequential([
-            #Masking(mask_value=0),
-            
-            #Embedding(input_dim=config["VOCABULARY_SIZE"], output_dim=config["OUTPUT_DIMENSION"], input_length=config["MAX_SEQUENCE_LENGTH"]),
-            #Flatten(),
-            #GatingLayer(config["MAX_SEQUENCE_LENGTH"] * config["OUTPUT_DIMENSION"]),
-            #Dropout(0.2),
-            #Dense(2048, activation='relu'),
             Dense(config["MAX_SEQUENCE_LENGTH"], activation='relu'),
             Dense(50, activation='relu'),
             Dense(50, activation='relu'),
             Dense(config["MAX_OUTPUT_SEQUENCE_LENGTH"], activation='relu')
-            #Dense(config["VOCAB_NEURONS"] * config["MAX_OUTPUT_SEQUENCE_LENGTH"], activation='sigmoid')# Use of sigmoid activated neurons for handling very large vocabularies
         ])
 
         optimizer = optimizers.Adam(learning_rate=config["LEARNING_RATE"])
 
         # Compile the mode
         self.model.compile(optimizer=optimizer, loss='mean_squared_error')
-        #print(self.model.summary())
     
     
     def load(self):
@@ -92,9 +84,6 @@ class Trainer_Model(Model):
         self.history = optm.train(200)
         print("Hai")
         print("Hello\n\n\n")
-
-
-
         return
 
     def save_model(self):
@@ -108,7 +97,6 @@ class Trainer_Model(Model):
                 pickle.dump(self.history.history['val_loss'], file)
             except KeyError:
                 return
-                #pickle.dump(np.zeros(range(1, len(self.history.history['loss']) + 1)), file)
 
 class User_Model(Model):# not needed
     """
@@ -122,21 +110,14 @@ class User_Model(Model):# not needed
         self.load()
         print(f"\n\nLoaded model weight: {self.model.layers[1].get_weights()[0][0][0]}")
     def predict(self, X_new):
-        #print(f"Predicting on : {np.array([X_new])}")
         predictions = self.model.predict(np.array([X_new]))[0]
-        #print(f"Predictions: {predictions}\njjjjjjjjjjjjjjj")
-        #print(predictions)
         splitted = []
         index=0
         for _ in range((len(predictions) - config["VOCAB_NEURONS"])+1):
             splitted.append(predictions[index : index+config["VOCAB_NEURONS"]])
             index = index + config["VOCAB_NEURONS"]
-        #print(f"Splitted: {splitted}")
-        #print(f"Hai: {len(splitted[5])}")
         decimalsd = []
         
-        
-
         # Convert the binary string to an integer
 
         #return decimalsd
@@ -146,19 +127,8 @@ class User_Model(Model):# not needed
                 result = int(binary_string, 2)
             except ValueError:
                 break
-            #print(f"bin: {binary_string}")
+
             decimalsd.append(result)
-            #print(f"dec{decimalsd}")
-
-            """dec = []
-            for i in each:
-                if i > 0.5:
-                    dec.append("1")
-                else:
-                    dec.append("0")
-            decimal = int(''.join(dec), 2)
-            decimals.append(decimal)"""
-
         return decimalsd
 
 class Advanced_Trainer_Model(Trainer_Model):# not needed
@@ -173,7 +143,7 @@ class Advanced_Trainer_Model(Trainer_Model):# not needed
         self.model.fit(np.array(X_train), np.array(y_train), epochs=int(epochs), validation_split=config["VALIDATION_SPLIT"], batch_size=int(batch_size))
         
 
-class Tester_Model(User_Model):
+class Tester_Model(User_Model):# not needed
     def __init__(self) -> None:
         super().__init__()
     def predict(self, X_test):
