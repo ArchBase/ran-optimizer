@@ -33,11 +33,12 @@
         11
     ],
     "IGNORE_COLUMN_INDICES_TEST": [],
-    "MAX_UPDATE_FACTOR": 0.001,
-    "MIN_UPDATE_FACTOR": -0.001,
+    "MAX_UPDATE_FACTOR": -0.42589999999999845,
+    "MIN_UPDATE_FACTOR": 0.42589999999999845,
     "Y_TRAIN_INDEX": [
         1,
         2
     ],
-    "RUNNING_FIRST_TIME": false
+    "RUNNING_FIRST_TIME": false,
+    "BATCH_SIZE": 10
 }

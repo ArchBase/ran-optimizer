@@ -18,6 +18,8 @@ class History:
             element_counts = Counter(last_5_loss_values)
             for loss, number_of_occurence in element_counts.items():
                 if number_of_occurence > 2:
+                    config["MAX_UPDATE_FACTOR"] -= 0.0001
+                    config["MIN_UPDATE_FACTOR"] += 0.0001
                     return True
             return False
         except IndexError:
@@ -131,6 +133,17 @@ class Ran_Optimizer:
         self.epochs = 0
         self.history = History()
     
+    def roll_dataset(self):
+        x_train = self.x_train[:config["BATCH_SIZE"]]
+        y_train = self.y_train[:config["BATCH_SIZE"]]
+
+        self.x_train = self.x_train[config["BATCH_SIZE"]:]
+        self.y_train = self.y_train[config["BATCH_SIZE"]:]
+
+        self.x_train = self.x_train + x_train
+        self.y_train = self.y_train + y_train
+
+    
     def shuffle(self):# not needed
         self.x_train, self.y_train = zip(*(random.sample(list(zip(self.x_train, self.y_train)), len(self.x_train))))
 
@@ -141,9 +154,10 @@ class Ran_Optimizer:
         return something
 
     def get_loss_batched(self):
-        self.shuffle()
-        x_test_tensor = tf.convert_to_tensor(self.x_train, dtype=tf.int32)
-        y_test_tensor = tf.convert_to_tensor(self.y_train, dtype=tf.int32)
+        #self.shuffle()
+        self.roll_dataset()
+        x_test_tensor = tf.convert_to_tensor(self.x_train[:100], dtype=tf.int32)
+        y_test_tensor = tf.convert_to_tensor(self.y_train[:100], dtype=tf.int32)
         something = self.model.evaluate(x_test_tensor, y_test_tensor)
         return something
 
@@ -154,9 +168,9 @@ class Ran_Optimizer:
             return
         self.new_params = self.weight_maniputlator.apply_grad(grad, copy.deepcopy(self.prev_params))
         self.model.set_weights(self.new_params)
-        self.new_loss = self.get_loss_batched()
+        self.new_loss = self.get_loss()
         #self.new_loss = np.random.uniform(-1, 1)
-        self.history.history["loss"].append(self.get_loss())
+        self.history.history["loss"].append(self.new_loss)
         self.history.history["loss_non_batched"].append(self.new_loss)
         self.epoch_count += 1
         

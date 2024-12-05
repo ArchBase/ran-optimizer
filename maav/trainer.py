@@ -67,7 +67,7 @@ class Trainer:
         print("\nStarting training.")
         try:
             start_time = time.time()
-            self.model.train_model(tf.cast(tf.constant(self.dataset.X_train), tf.int32), tf.cast(tf.constant(self.dataset.y_train), tf.int32), epochs=epochs, batch_size=batch_size)
+            self.model.train_model(self.dataset.X_train, self.dataset.y_train, epochs=epochs, batch_size=batch_size)
             end_time = time.time()
             time_taken = end_time - start_time
             print("Time taken by the optimization algorithm: {:.6f} seconds".format(time_taken))
